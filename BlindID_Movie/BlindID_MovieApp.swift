@@ -9,9 +9,25 @@ import SwiftUI
 
 @main
 struct BlindID_MovieApp: App {
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+        }
+    }
+}
+
+struct RootView: View {
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+
+    var body: some View {
+        Group {
+            if isLoggedIn {
+                MainTabView()
+            } else {
+                LoginView()
+            }
         }
     }
 }
