@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RegisterView: View {
     @StateObject private var viewModel = RegisterViewModel()
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @State private var isPasswordVisible = false
 
     var body: some View {
@@ -55,6 +56,9 @@ struct RegisterView: View {
             Button {
                 Task {
                     await viewModel.register()
+                    if viewModel.isSuccess {
+                        isLoggedIn = true
+                    }
                 }
             } label: {
                 Text(viewModel.constants.registerButtonText)

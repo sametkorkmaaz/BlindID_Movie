@@ -16,6 +16,7 @@ class RegisterViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var successMessage: String?
+    @Published var isSuccess: Bool = false
 
     let constants = RegisterConstants()
 
@@ -29,8 +30,10 @@ class RegisterViewModel: ObservableObject {
         do {
             let response = try await BlindService().registerUser(request)
             successMessage = response.message
+            isSuccess = true
         } catch {
             errorMessage = error.localizedDescription
+            isSuccess = false
         }
 
         isLoading = false
