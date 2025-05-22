@@ -22,7 +22,7 @@ struct MainTabView: View {
 
     var body: some View {
         TabView {
-            LoginView()
+            HomeView()
                 .tabItem {
                     Image("homeIcon")
                         .renderingMode(.template)

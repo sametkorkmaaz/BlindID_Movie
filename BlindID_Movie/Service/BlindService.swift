@@ -29,4 +29,13 @@ class BlindService {
         NetworkManager.shared.authToken = response.token
         return response
     }
+    
+    func fetchAllMovies() async throws -> [Movie] {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: [Movie].self
+        )
+    }
 }
