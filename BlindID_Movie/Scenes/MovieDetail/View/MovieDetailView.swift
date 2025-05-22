@@ -10,6 +10,7 @@ import SwiftUI
 struct MovieDetailView: View {
     let movieId: Int
     @StateObject private var viewModel = MovieDetailViewModel()
+    @State private var isLiked: Bool = false
 
     var body: some View {
         ZStack {
@@ -27,7 +28,7 @@ struct MovieDetailView: View {
                             AsyncImage(url: URL(string: movie.poster_url ?? "")) { image in
                                 image.resizable().scaledToFit()
                             } placeholder: {
-                                Color.gray
+                                Color.darkBG
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 280)
@@ -76,6 +77,19 @@ struct MovieDetailView: View {
                     }
                     .foregroundColor(.white)
                     .padding()
+                }
+            }
+        }
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    isLiked.toggle()
+                    print(isLiked ? "Liked" : "Unliked")
+                }) {
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(isLiked ? .orangeO50 : .orangeO50)
                 }
             }
         }
