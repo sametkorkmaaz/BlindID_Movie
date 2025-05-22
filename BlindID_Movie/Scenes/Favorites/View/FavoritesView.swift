@@ -12,26 +12,15 @@ struct FavoritesView: View {
     @StateObject private var viewModel = FavoritesViewModel()
 
     var body: some View {
-        ZStack {
-            Color.darkBG.ignoresSafeArea()
+        NavigationView {
+            ZStack {
+                Color.darkBG.ignoresSafeArea()
 
-            if viewModel.isLoading {
-                ProgressView("Loading favorites...")
-            } else if let error = viewModel.errorMessage {
-                Text(error).foregroundColor(.red)
-            } else {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Favorites")
-                        .font(FontManager.poppinsSemiBold(size: 32))
-                        .foregroundColor(.orangeO50)
-                        .padding(.horizontal)
-                        .padding(.vertical)
-
-                    Divider()
-                        .background(Color.blueB10)
-                        .frame(height: 1)
-                        .padding(.bottom, 8)
-
+                if viewModel.isLoading {
+                    ProgressView("Loading favorites...")
+                } else if let error = viewModel.errorMessage {
+                    Text(error).foregroundColor(.red)
+                } else {
                     ScrollView {
                         VStack(spacing: 12) {
                             ForEach(viewModel.likedMovies) { movie in
@@ -41,10 +30,12 @@ struct FavoritesView: View {
                                 .buttonStyle(PlainButtonStyle())
                             }
                         }
-                        .padding(.horizontal)
+                        .padding()
                     }
                 }
             }
+            .navigationTitle("Favorites")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .task {
             await viewModel.loadLikedMovies()
