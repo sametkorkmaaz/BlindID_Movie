@@ -9,20 +9,24 @@ import Foundation
 
 class BlindService {
     func registerUser(_ request: RegisterRequestModel) async throws -> RegisterResponseModel {
-        try await NetworkManager.shared.request(
+        let response = try await NetworkManager.shared.request(
             endpoint: "/api/auth/register",
             method: .POST,
             body: request,
             responseModel: RegisterResponseModel.self
         )
+        NetworkManager.shared.authToken = response.token
+        return response
     }
 
     func loginUser(_ request: LoginRequestModel) async throws -> LoginResponseModel {
-        try await NetworkManager.shared.request(
+        let response = try await NetworkManager.shared.request(
             endpoint: "/api/auth/login",
             method: .POST,
             body: request,
             responseModel: LoginResponseModel.self
         )
+        NetworkManager.shared.authToken = response.token
+        return response
     }
 }

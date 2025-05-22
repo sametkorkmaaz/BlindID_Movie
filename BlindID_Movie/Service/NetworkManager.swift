@@ -23,6 +23,8 @@ class NetworkManager {
     private let baseURL = URL(string: "https://moviatask.cerasus.app")!
     private init() {}
 
+    var authToken: String?
+
     func request<T: Decodable, U: Encodable>(
         endpoint: String,
         method: HTTPMethod = .GET,
@@ -36,6 +38,10 @@ class NetworkManager {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = authToken {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         if method != .GET, let body = body {
             do {
