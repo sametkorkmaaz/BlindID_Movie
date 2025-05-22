@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @State private var isPasswordVisible = false
 
     var body: some View {
@@ -71,6 +72,9 @@ struct LoginView: View {
                 Button {
                     Task {
                         await viewModel.login()
+                        if viewModel.isSuccess {
+                            isLoggedIn = true
+                        }
                     }
                 } label: {
                     Text(viewModel.constants.loginButtonText)
