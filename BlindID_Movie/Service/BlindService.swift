@@ -65,4 +65,28 @@ class BlindService {
             responseModel: EditProfileResponseModel.self
         )
     }
+    
+    func likeMovieById(_ id: Int) async throws -> MovieLikeResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/like/\(id)",
+            method: .POST,
+            body: Optional<String>.none,
+            responseModel: MovieLikeResponseModel.self)
+    }
+    
+    func unLikeMovieById(_ id: Int) async throws -> MovieLikeResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/unlike/\(id)",
+            method: .POST,
+            body: Optional<String>.none,
+            responseModel: MovieLikeResponseModel.self)
+    }
+    
+    func fetchLikedMovies() async throws -> [Movie] {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/users/liked-movies",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: [Movie].self)
+    }
 }

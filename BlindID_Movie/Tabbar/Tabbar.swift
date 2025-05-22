@@ -33,7 +33,7 @@ struct MainTabView: View {
                 .tabItem {
                     Image("heartIcon")
                         .renderingMode(.template)
-                    Text("Search")
+                    Text("Favorites")
                 }
 
             ProfileView()
