@@ -29,7 +29,7 @@ struct MainTabView: View {
                     Text("Home")
                 }
 
-            LoginView()
+            FavoritesView()
                 .tabItem {
                     Image("heartIcon")
                         .renderingMode(.template)
