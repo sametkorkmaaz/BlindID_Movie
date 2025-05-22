@@ -53,15 +53,14 @@ struct ProfileView: View {
 
                         Spacer()
 
-                        Button("Edit") {
-                            // edit işlemi sonra yapılacak
-                            print("Edit tapped")
+                        NavigationLink(destination: EditProfileView()) {
+                            Text("Edit")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blueB10)
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blueB10)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
                         .padding(.horizontal)
 
                         Spacer()
