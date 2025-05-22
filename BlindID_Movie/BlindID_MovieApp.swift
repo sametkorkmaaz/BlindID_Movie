@@ -11,7 +11,7 @@ import SwiftUI
 struct BlindID_MovieApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }
