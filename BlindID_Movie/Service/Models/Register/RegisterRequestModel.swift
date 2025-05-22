@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct RegisterRequestModel: Encodable {
+    let name: String
+    let surname: String
+    let email: String
+    let password: String
+}
