@@ -47,4 +47,13 @@ class BlindService {
             responseModel: UserDataResponseModel.self
         )
     }
+    
+    func updateUserProfile(_ request: EditProfileRequestModel) async throws -> EditProfileResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/users/profile",
+            method: .PUT,
+            body: request,
+            responseModel: EditProfileResponseModel.self
+        )
+    }
 }
