@@ -39,6 +39,15 @@ class BlindService {
         )
     }
     
+    func fetchMovieById(_ id: Int) async throws -> Movie {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/\(id)",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: Movie.self
+        )
+    }
+    
     func fetchCurrentUser() async throws -> UserDataResponseModel {
         try await NetworkManager.shared.request(
             endpoint: "/api/auth/me",
