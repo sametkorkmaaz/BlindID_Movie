@@ -21,9 +21,19 @@ enum HTTPMethod: String {
 class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = URL(string: "https://moviatask.cerasus.app")!
-    private init() {}
+    private init() {
+        self.authToken = UserDefaults.standard.string(forKey: "authToken")
+    }
 
-    var authToken: String?
+    var authToken: String? {
+        didSet {
+            if let token = authToken {
+                UserDefaults.standard.set(token, forKey: "authToken")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "authToken")
+            }
+        }
+    }
 
     func request<T: Decodable, U: Encodable>(
         endpoint: String,
@@ -53,6 +63,7 @@ class NetworkManager {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+            print("Response: \(String(data: data, encoding: .utf8) ?? "")")
             guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
                 throw NetworkError.invalidResponse
             }

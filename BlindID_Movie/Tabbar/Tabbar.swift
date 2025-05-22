@@ -36,7 +36,7 @@ struct MainTabView: View {
                     Text("Search")
                 }
 
-            LoginView()
+            ProfileView()
                 .tabItem {
                     Image("personIcon")
                         .renderingMode(.template)
