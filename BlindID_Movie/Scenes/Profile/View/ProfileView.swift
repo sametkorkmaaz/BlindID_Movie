@@ -53,7 +53,11 @@ struct ProfileView: View {
 
                         Spacer()
 
-                        NavigationLink(destination: EditProfileView()) {
+                        NavigationLink(destination: EditProfileView().onDisappear {
+                            Task {
+                                await viewModel.fetchUserData()
+                            }
+                        }) {
                             Text("Edit")
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -102,3 +106,4 @@ struct ProfileInfoCard: View {
 #Preview {
     ProfileView()
 }
+
