@@ -85,11 +85,14 @@ struct MovieDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    isLiked.toggle()
-                    print(isLiked ? "Liked" : "Unliked")
+                    Task {
+                        if let id = viewModel.movie?.id {
+                            await viewModel.toggleLike(for: id)
+                        }
+                    }
                 }) {
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
-                        .foregroundColor(isLiked ? .orangeO50 : .orangeO50)
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.orangeO50)
                 }
             }
         }

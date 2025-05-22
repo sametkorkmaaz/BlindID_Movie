@@ -12,12 +12,17 @@ struct UserDataResponseModel: Identifiable, Decodable {
     let name: String?
     let surname: String?
     let email: String?
-    let likedMovies: [String]?
+    let likedMovies: [Int]?
     let createdAt: String?
-    let updateAt: String?
+    let updatedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case name, surname, email, likedMovies, createdAt, updateAt
+        case name
+        case surname
+        case email
+        case likedMovies
+        case createdAt
+        case updatedAt
     }
 }
