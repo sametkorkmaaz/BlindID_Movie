@@ -25,14 +25,14 @@ struct HomeView: View {
                 Text(error).foregroundColor(.red)
             } else {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("All Movies")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding([.top, .horizontal])
+                    Text(viewModel.constants.homeViewTitleText)
+                        .font(FontManager.poppinsSemiBold(size: 32))
+                        .foregroundColor(.orangeO50)
+                        .padding([.vertical, .horizontal])
 
                     Divider()
                         .background(Color.blueB10)
+                        .frame(height: 1)
 
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 16) {
@@ -68,7 +68,7 @@ struct MovieGridItem: View {
                             .resizable()
                             .scaledToFill()
                     } placeholder: {
-                        Color.gray
+                        Color.grayG30
                     }
                     .frame(width: itemWidth, height: itemWidth * 1.5)
                     .clipped()
@@ -80,7 +80,7 @@ struct MovieGridItem: View {
                 .renderingMode(.template)
                 .padding(6)
                 .foregroundColor(.orangeO50)
-                .background(.white.opacity(0.8))
+                .background(.white.opacity(0.9))
                 .clipShape(Circle())
                 .padding(6)
         }

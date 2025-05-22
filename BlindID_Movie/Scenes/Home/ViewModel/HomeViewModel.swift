@@ -13,6 +13,8 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
 
+    let constants = HomeViewConstants()
+    
     func loadMovies() async {
         isLoading = true
         do {
