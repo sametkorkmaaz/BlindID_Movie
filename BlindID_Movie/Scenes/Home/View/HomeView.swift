@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
@@ -56,7 +57,6 @@ struct HomeView: View {
     }
 }
 
-
 struct MovieGridItem: View {
     let movie: Movie
 
@@ -64,17 +64,18 @@ struct MovieGridItem: View {
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            if let moviePosterURL = movie.poster_url {
-                AsyncImage(url: URL(string: moviePosterURL)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Color.grayG30
-                }
-                .frame(width: itemWidth, height: itemWidth * 1.5)
-                .clipped()
-                .cornerRadius(12)
+            if let posterURLString = movie.poster_url,
+               let posterURL = URL(string: posterURLString) {
+                
+                KFImage(posterURL)
+                    .resizable()
+                    .cacheMemoryOnly()
+                    .fade(duration: 0.1)
+                    .scaledToFill()
+                    .frame(width: itemWidth, height: itemWidth * 1.5)
+                    .clipped()
+                    .cornerRadius(12)
+                    .background(.grayG30.opacity(0.1))
             }
 
             Image("heartIcon")
