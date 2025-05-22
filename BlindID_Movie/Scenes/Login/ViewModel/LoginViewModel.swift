@@ -29,6 +29,7 @@ class LoginViewModel: ObservableObject {
             isSuccess = true
         } catch {
             errorMessage = error.localizedDescription
+            isSuccess = false
         }
         isLoading = false
     }

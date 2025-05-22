@@ -8,7 +8,7 @@
 import Foundation
 
 struct RegisterResponseModel: Decodable {
-    let message: String
-    let token: String
-    let user: UserModel
+    let message: String?
+    let token: String?
+    let user: UserModel?
 }
