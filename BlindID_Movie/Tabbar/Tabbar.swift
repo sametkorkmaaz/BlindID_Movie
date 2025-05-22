@@ -29,14 +29,14 @@ struct MainTabView: View {
                     Text("Home")
                 }
 
-            LoginView()
+            FavoritesView()
                 .tabItem {
                     Image("heartIcon")
                         .renderingMode(.template)
-                    Text("Search")
+                    Text("Favorites")
                 }
 
-            LoginView()
+            ProfileView()
                 .tabItem {
                     Image("personIcon")
                         .renderingMode(.template)

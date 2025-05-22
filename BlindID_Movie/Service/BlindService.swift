@@ -38,4 +38,56 @@ class BlindService {
             responseModel: [Movie].self
         )
     }
+    
+    func fetchMovieById(_ id: Int) async throws -> Movie {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/\(id)",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: Movie.self
+        )
+    }
+    
+    func fetchCurrentUser() async throws -> UserDataResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/auth/me",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: UserDataResponseModel.self
+        )
+    }
+    
+    func updateUserProfile(_ request: EditProfileRequestModel) async throws -> EditProfileResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/users/profile",
+            method: .PUT,
+            body: request,
+            responseModel: EditProfileResponseModel.self
+        )
+    }
+    
+    func likeMovieById(_ id: Int) async throws -> MovieLikeResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/like/\(id)",
+            method: .POST,
+            body: Optional<String>.none,
+            responseModel: MovieLikeResponseModel.self)
+    }
+    
+    func unLikeMovieById(_ id: Int) async throws -> MovieLikeResponseModel {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/movies/unlike/\(id)",
+            method: .POST,
+            body: Optional<String>.none,
+            responseModel: MovieLikeResponseModel.self)
+    }
+    
+    func fetchLikedMovies() async throws -> [Movie] {
+        try await NetworkManager.shared.request(
+            endpoint: "/api/users/liked-movies",
+            method: .GET,
+            body: Optional<String>.none,
+            responseModel: [Movie].self
+        )
+    }
 }
