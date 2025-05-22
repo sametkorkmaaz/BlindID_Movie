@@ -39,10 +39,28 @@ struct HomeView: View {
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: 16) {
                                 ForEach(viewModel.movies) { movie in
-                                    NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
-                                        MovieGridItem(movie: movie)
+                                    ZStack(alignment: .topTrailing) {
+                                        NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
+                                            MovieGridItem(movie: movie)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+
+                                        Button {
+                                            Task {
+                                                await viewModel.toggleLike(for: movie.id)
+                                            }
+                                        } label: {
+                                            Image(systemName: viewModel.likedMovieIDs.contains(movie.id ?? -1) ? "heart.fill" : "heart")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 20, height: 20)
+                                                .foregroundColor(.orangeO50)
+                                                .padding(6)
+                                                .background(.white.opacity(0.9))
+                                                .clipShape(Circle())
+                                        }
+                                        .padding(6)
                                     }
-                                    .buttonStyle(PlainButtonStyle())
                                 }
                             }
                             .padding()
@@ -51,7 +69,7 @@ struct HomeView: View {
                 }
             }
             .task {
-                await viewModel.loadMovies()
+                await viewModel.loadAll()
             }
         }
     }
@@ -59,32 +77,19 @@ struct HomeView: View {
 
 struct MovieGridItem: View {
     let movie: Movie
-
     private let itemWidth = (UIScreen.main.bounds.width - 3 * 16) / 2
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            if let posterURLString = movie.poster_url,
-               let posterURL = URL(string: posterURLString) {
-                
-                KFImage(posterURL)
-                    .resizable()
-                    .cacheMemoryOnly()
-                    .fade(duration: 0.1)
-                    .scaledToFill()
-                    .frame(width: itemWidth, height: itemWidth * 1.5)
-                    .clipped()
-                    .cornerRadius(12)
-                    .background(.grayG30.opacity(0.1))
-            }
-
-            Image("heartIcon")
-                .renderingMode(.template)
-                .padding(6)
-                .foregroundColor(.orangeO50)
-                .background(.white.opacity(0.9))
-                .clipShape(Circle())
-                .padding(6)
+        if let posterURLString = movie.poster_url,
+           let posterURL = URL(string: posterURLString) {
+            KFImage(posterURL)
+                .resizable()
+                .fade(duration: 0.15)
+                .cacheOriginalImage()
+                .scaledToFill()
+                .frame(width: itemWidth, height: itemWidth * 1.5)
+                .clipped()
+                .cornerRadius(12)
         }
     }
 }

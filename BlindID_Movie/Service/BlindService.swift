@@ -87,6 +87,7 @@ class BlindService {
             endpoint: "/api/users/liked-movies",
             method: .GET,
             body: Optional<String>.none,
-            responseModel: [Movie].self)
+            responseModel: [Movie].self
+        )
     }
 }
