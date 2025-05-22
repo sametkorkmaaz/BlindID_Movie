@@ -8,11 +8,83 @@
 import SwiftUI
 
 struct MovieDetailView: View {
+    let movieId: Int
+    @StateObject private var viewModel = MovieDetailViewModel()
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Color.darkBG.ignoresSafeArea()
+
+            if viewModel.isLoading {
+                ProgressView("Loading...")
+            } else if let error = viewModel.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+            } else if let movie = viewModel.movie {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ZStack(alignment: .bottomTrailing) {
+                            AsyncImage(url: URL(string: movie.poster_url ?? "")) { image in
+                                image.resizable().scaledToFit()
+                            } placeholder: {
+                                Color.gray
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 280)
+                            .cornerRadius(12)
+
+                            HStack(spacing: 4) {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.orangeO50)
+                                Text(String(format: "%.1f", movie.rating ?? 0.0))
+                                    .foregroundColor(.orangeO50)
+                                    .font(.subheadline)
+                            }
+                            .padding(8)
+                            .background(Color.white.opacity(0.1))
+                            .cornerRadius(8)
+                            .padding(10)
+                        }
+
+                        Text(movie.title ?? "Unknown Title")
+                            .font(.title)
+                            .fontWeight(.bold)
+
+                        Text("Category: \(movie.category ?? "-")")
+                            .foregroundColor(.grayG30)
+
+                        Text("Year: \(movie.year ?? 0)")
+                            .font(.subheadline)
+
+                        if let actors = movie.actors {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Actors:")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+
+                                ForEach(actors, id: \.self) { actor in
+                                    Text(actor)
+                                        .font(FontManager.poppinsRegular(size: 18))
+                                        .foregroundColor(.blueB10)
+                                }
+                            }
+                        }
+
+                        Text(movie.description ?? "")
+                            .font(.body)
+                            .padding(.top, 8)
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                }
+            }
+        }
+        .task {
+            await viewModel.fetchMovie(by: movieId)
+        }
     }
 }
 
 #Preview {
-    MovieDetailView()
+    MovieDetailView(movieId: 2)
 }
