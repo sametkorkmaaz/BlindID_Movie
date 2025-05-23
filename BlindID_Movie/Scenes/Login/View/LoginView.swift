@@ -98,25 +98,18 @@ struct LoginView: View {
                     ZStack {
                         Color.black.opacity(0.3)
                             .ignoresSafeArea()
-                        
-                        VStack(spacing: 12) {
-                            Text("BlindID")
-                                .font(FontManager.poppinsBold(size: 24))
-                                .foregroundColor(.blueB10)
-                                .opacity(0.85)
-                            
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .blueB10))
-                        }
-                        .padding()
-                        .background(Color(.darkBG))
-                        .cornerRadius(16)
-                        .shadow(radius: 10)
-                        .frame(width: 180)
+
+                        BlindAnimationView()
+                            .padding()
+                            .background(Color.darkBG)
+                            .cornerRadius(16)
+                            .shadow(radius: 10)
+                            .frame(width: 200, height: 150)
                     }
                     .transition(.opacity)
                     .zIndex(1)
                 }
+                
                 if showErrorPopup {
                     PopupView(isPresented: $showErrorPopup)
                         .transition(.opacity)
