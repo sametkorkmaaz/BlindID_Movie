@@ -11,6 +11,7 @@ struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @State private var isPasswordVisible = false
+    @State private var showErrorPopup = false
 
     var body: some View {
         NavigationView {
@@ -20,16 +21,16 @@ struct LoginView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 240, height: 240)
-
+                    
                     VStack(spacing: 8) {
                         Text(viewModel.constants.welcomeText)
                             .font(FontManager.poppinsBold(size: 28))
-
+                        
                         Text(viewModel.constants.loginMessageTexxt)
                             .foregroundColor(.grayG30)
                             .font(FontManager.poppinsMedium(size: 16))
                     }
-
+                    
                     HStack {
                         Image(systemName: viewModel.constants.emailTextfiledLogoName)
                             .foregroundColor(.grayG30)
@@ -40,17 +41,17 @@ struct LoginView: View {
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-
+                    
                     HStack {
                         Image(systemName: viewModel.constants.passwordTextfieldLogoName)
                             .foregroundColor(.grayG30)
-
+                        
                         if isPasswordVisible {
                             TextField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
                         } else {
                             SecureField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
                         }
-
+                        
                         Button(action: {
                             isPasswordVisible.toggle()
                         }) {
@@ -61,7 +62,7 @@ struct LoginView: View {
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-
+                    
                     HStack {
                         Spacer()
                         NavigationLink(destination: RegisterView()) {
@@ -70,12 +71,14 @@ struct LoginView: View {
                                 .foregroundColor(.blue)
                         }
                     }
-
+                    
                     Button {
                         Task {
                             await viewModel.login()
                             if viewModel.isSuccess {
                                 isLoggedIn = true
+                            } else if viewModel.errorMessage != nil {
+                                showErrorPopup = true
                             }
                         }
                     } label: {
@@ -87,45 +90,30 @@ struct LoginView: View {
                             .cornerRadius(30)
                     }
                     .disabled(viewModel.isLoading)
-
-                    if viewModel.isSuccess {
-                        Text("Başarılı")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                            .padding(.top, 4)
-                    } else if let error = viewModel.errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.caption)
-                            .padding(.top, 4)
-                    }
-
                     Spacer()
                 }
                 .padding()
-
+                
                 if viewModel.isLoading {
                     ZStack {
                         Color.black.opacity(0.3)
                             .ignoresSafeArea()
 
-                        VStack(spacing: 12) {
-                            Text("BlindID")
-                                .font(FontManager.poppinsBold(size: 24))
-                                .foregroundColor(.blueB10)
-                                .opacity(0.85)
-
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .blueB10))
-                        }
-                        .padding()
-                        .background(Color(.darkBG))
-                        .cornerRadius(16)
-                        .shadow(radius: 10)
-                        .frame(width: 180)
+                        BlindAnimationView()
+                            .padding()
+                            .background(Color.darkBG)
+                            .cornerRadius(16)
+                            .shadow(radius: 10)
+                            .frame(width: 200, height: 150)
                     }
                     .transition(.opacity)
                     .zIndex(1)
+                }
+                
+                if showErrorPopup {
+                    PopupView(isPresented: $showErrorPopup)
+                        .transition(.opacity)
+                        .zIndex(2)
                 }
             }
         }

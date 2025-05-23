@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditProfileView: View {
     @StateObject private var viewModel = EditProfileViewModel()
+    @State private var showErrorPopup = false
 
     var body: some View {
         ZStack {
@@ -36,6 +37,9 @@ struct EditProfileView: View {
                 Button("Save Changes") {
                     Task {
                         await viewModel.updateProfile()
+                        if viewModel.errorMessage != nil {
+                            showErrorPopup = true
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -51,18 +55,16 @@ struct EditProfileView: View {
                         .font(.caption)
                         .padding(.top, 4)
                 }
-
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .padding(.top, 4)
-                }
-
                 Spacer()
             }
+            
+            if showErrorPopup {
+                PopupView(isPresented: $showErrorPopup)
+                    .transition(.opacity)
+                    .zIndex(2)
+            }
         }
-        .navigationTitle("")
+        .navigationTitle("Edit Profile")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -80,6 +82,7 @@ struct ProfileEditField: View {
 
             if isSecure {
                 SecureField(title, text: $text)
+                    .foregroundColor(.white)
                     .padding()
                     .background(Color.gray.opacity(0.15))
                     .cornerRadius(12)
@@ -89,6 +92,7 @@ struct ProfileEditField: View {
                     )
             } else {
                 TextField(title, text: $text)
+                    .foregroundColor(.white)
                     .padding()
                     .background(Color.gray.opacity(0.15))
                     .cornerRadius(12)
