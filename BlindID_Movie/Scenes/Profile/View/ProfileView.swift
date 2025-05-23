@@ -17,9 +17,10 @@ struct ProfileView: View {
                 Color.darkBG.ignoresSafeArea()
 
                 if viewModel.isLoading {
-                    ProgressView("Loading...")
+                    BlindAnimationView()
                 } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(.red)
+                    Text(error)
+                        .foregroundColor(.red)
                 } else if let user = viewModel.userData {
                     VStack(spacing: 16) {
                         HStack {

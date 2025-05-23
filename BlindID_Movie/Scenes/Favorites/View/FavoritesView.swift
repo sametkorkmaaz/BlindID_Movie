@@ -17,24 +17,43 @@ struct FavoritesView: View {
                 Color.darkBG.ignoresSafeArea()
 
                 if viewModel.isLoading {
-                    ProgressView("Loading favorites...")
+                    BlindAnimationView()
                 } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(.red)
+                    Text(error)
+                        .foregroundColor(.red)
                 } else {
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            ForEach(viewModel.likedMovies) { movie in
-                                NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
-                                    FavoriteRow(movie: movie)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Favorites")
+                            .font(FontManager.poppinsSemiBold(size: 32))
+                            .foregroundColor(.orangeO50)
+                            .padding(.horizontal)
+                            .padding(.vertical)
+
+                        Divider()
+                            .background(Color.blueB10)
+                            .frame(height: 1)
+                            .padding(.bottom, 8)
+
+                        if viewModel.likedMovies.isEmpty {
+                            Spacer()
+                            EmptyStateView(messageText: "Henüz favorilere film eklenmedi.")
+                            Spacer()
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 12) {
+                                    ForEach(viewModel.likedMovies) { movie in
+                                        NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
+                                            FavoriteRow(movie: movie)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                    }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .padding(.horizontal)
                             }
                         }
-                        .padding()
                     }
                 }
             }
-            .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.inline)
         }
         .task {

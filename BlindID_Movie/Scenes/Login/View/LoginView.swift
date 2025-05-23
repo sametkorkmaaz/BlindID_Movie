@@ -14,93 +14,120 @@ struct LoginView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                Image(viewModel.constants.blindImageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 240, height: 240)
+            ZStack {
+                VStack(spacing: 24) {
+                    Image(viewModel.constants.blindImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 240, height: 240)
 
-                VStack(spacing: 8) {
-                    Text(viewModel.constants.welcomeText)
-                        .font(FontManager.poppinsBold(size: 28))
+                    VStack(spacing: 8) {
+                        Text(viewModel.constants.welcomeText)
+                            .font(FontManager.poppinsBold(size: 28))
 
-                    Text(viewModel.constants.loginMessageTexxt)
-                        .foregroundColor(.grayG30)
-                        .font(FontManager.poppinsMedium(size: 16))
-                }
-
-                HStack {
-                    Image(systemName: viewModel.constants.emailTextfiledLogoName)
-                        .foregroundColor(.grayG30)
-                    TextField(viewModel.constants.emailTextfiledPlaceholder, text: $viewModel.email)
-                        .autocapitalization(.none)
-                        .keyboardType(.emailAddress)
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-                HStack {
-                    Image(systemName: viewModel.constants.passwordTextfieldLogoName)
-                        .foregroundColor(.grayG30)
-
-                    if isPasswordVisible {
-                        TextField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
-                    } else {
-                        SecureField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
+                        Text(viewModel.constants.loginMessageTexxt)
+                            .foregroundColor(.grayG30)
+                            .font(FontManager.poppinsMedium(size: 16))
                     }
 
-                    Button(action: {
-                        isPasswordVisible.toggle()
-                    }) {
-                        Image(systemName: isPasswordVisible ? viewModel.constants.passwordTextFieldSlashEyeIconName : viewModel.constants.passwordTextFieldEyeIconName)
-                            .foregroundColor(.gray)
+                    HStack {
+                        Image(systemName: viewModel.constants.emailTextfiledLogoName)
+                            .foregroundColor(.grayG30)
+                        TextField(viewModel.constants.emailTextfiledPlaceholder, text: $viewModel.email)
+                            .autocapitalization(.none)
+                            .keyboardType(.emailAddress)
                     }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
 
-                HStack {
-                    Spacer()
-                    NavigationLink(destination: RegisterView()) {
-                        Text(viewModel.constants.registerButtonText)
-                            .font(.footnote)
-                            .foregroundColor(.blue)
-                    }
-                }
+                    HStack {
+                        Image(systemName: viewModel.constants.passwordTextfieldLogoName)
+                            .foregroundColor(.grayG30)
 
-                Button {
-                    Task {
-                        await viewModel.login()
-                        if viewModel.isSuccess {
-                            isLoggedIn = true
+                        if isPasswordVisible {
+                            TextField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
+                        } else {
+                            SecureField(viewModel.constants.passwordTextfieldPlaceholder, text: $viewModel.password)
+                        }
+
+                        Button(action: {
+                            isPasswordVisible.toggle()
+                        }) {
+                            Image(systemName: isPasswordVisible ? viewModel.constants.passwordTextFieldSlashEyeIconName : viewModel.constants.passwordTextFieldEyeIconName)
+                                .foregroundColor(.gray)
                         }
                     }
-                } label: {
-                    Text(viewModel.constants.loginButtonText)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+
+                    HStack {
+                        Spacer()
+                        NavigationLink(destination: RegisterView()) {
+                            Text(viewModel.constants.registerButtonText)
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                    }
+
+                    Button {
+                        Task {
+                            await viewModel.login()
+                            if viewModel.isSuccess {
+                                isLoggedIn = true
+                            }
+                        }
+                    } label: {
+                        Text(viewModel.constants.loginButtonText)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.blueB10)
+                            .cornerRadius(30)
+                    }
+                    .disabled(viewModel.isLoading)
+
+                    if viewModel.isSuccess {
+                        Text("Başarılı")
+                            .foregroundColor(.green)
+                            .font(.caption)
+                            .padding(.top, 4)
+                    } else if let error = viewModel.errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .padding(.top, 4)
+                    }
+
+                    Spacer()
+                }
+                .padding()
+
+                if viewModel.isLoading {
+                    ZStack {
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
+
+                        VStack(spacing: 12) {
+                            Text("BlindID")
+                                .font(FontManager.poppinsBold(size: 24))
+                                .foregroundColor(.blueB10)
+                                .opacity(0.85)
+
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .blueB10))
+                        }
                         .padding()
-                        .background(.blueB10)
-                        .cornerRadius(30)
+                        .background(Color(.darkBG))
+                        .cornerRadius(16)
+                        .shadow(radius: 10)
+                        .frame(width: 180)
+                    }
+                    .transition(.opacity)
+                    .zIndex(1)
                 }
-                .disabled(viewModel.isLoading)
-
-                if viewModel.isSuccess {
-                    Text("Başarılı")
-                        .foregroundColor(.green)
-                        .font(.caption)
-                        .padding(.top, 4)
-                } else if let error = viewModel.errorMessage {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .padding(.top, 4)
-                }
-
-                Spacer()
             }
-            .padding()
         }
     }
 }

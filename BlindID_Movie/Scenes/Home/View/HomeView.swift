@@ -22,7 +22,7 @@ struct HomeView: View {
                 Color.darkBG.ignoresSafeArea()
 
                 if viewModel.isLoading {
-                    ProgressView("Loading movies...")
+                    BlindAnimationView()
                 } else if let error = viewModel.errorMessage {
                     Text(error).foregroundColor(.red)
                 } else {
