@@ -10,14 +10,13 @@ import SwiftUI
 struct MovieDetailView: View {
     let movieId: Int
     @StateObject private var viewModel = MovieDetailViewModel()
-    @State private var isLiked: Bool = false
 
     var body: some View {
         ZStack {
             Color.darkBG.ignoresSafeArea()
 
             if viewModel.isLoading {
-                ProgressView("Loading...")
+                BlindAnimationView()
             } else if let error = viewModel.errorMessage {
                 Text(error)
                     .foregroundColor(.red)
@@ -101,7 +100,6 @@ struct MovieDetailView: View {
         }
     }
 }
-
 #Preview {
     MovieDetailView(movieId: 2)
 }
