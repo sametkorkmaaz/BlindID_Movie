@@ -10,6 +10,9 @@ import SwiftUI
 struct EditProfileView: View {
     @StateObject private var viewModel = EditProfileViewModel()
     @State private var showErrorPopup = false
+    @State private var initialName = ""
+    @State private var initialSurname = ""
+    @State private var initialEmail = ""
 
     var body: some View {
         ZStack {
@@ -44,10 +47,11 @@ struct EditProfileView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.blueB10)
+                .background(isModified ? Color.blueB10 : Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(12)
                 .padding(.horizontal)
+                .disabled(!isModified)
 
                 if let success = viewModel.successMessage {
                     Text(success)
@@ -57,7 +61,21 @@ struct EditProfileView: View {
                 }
                 Spacer()
             }
-            
+            .onAppear {
+                Task {
+                    if let user = try? await BlindService().fetchCurrentUser() {
+                        viewModel.name = user.name ?? ""
+                        viewModel.surname = user.surname ?? ""
+                        viewModel.email = user.email ?? ""
+
+                        initialName = user.name ?? ""
+                        initialSurname = user.surname ?? ""
+                        initialEmail = user.email ?? ""
+                        viewModel.password = ""
+                    }
+                }
+            }
+
             if showErrorPopup {
                 PopupView(isPresented: $showErrorPopup)
                     .transition(.opacity)
@@ -66,6 +84,13 @@ struct EditProfileView: View {
         }
         .navigationTitle("Edit Profile")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var isModified: Bool {
+        viewModel.name != initialName ||
+        viewModel.surname != initialSurname ||
+        viewModel.email != initialEmail ||
+        !viewModel.password.isEmpty
     }
 }
 
