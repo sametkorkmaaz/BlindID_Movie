@@ -19,7 +19,8 @@ struct FavoritesView: View {
                 if viewModel.isLoading {
                     BlindAnimationView()
                 } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(.red)
+                    Text(error)
+                        .foregroundColor(.red)
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Favorites")
@@ -33,16 +34,22 @@ struct FavoritesView: View {
                             .frame(height: 1)
                             .padding(.bottom, 8)
 
-                        ScrollView {
-                            VStack(spacing: 12) {
-                                ForEach(viewModel.likedMovies) { movie in
-                                    NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
-                                        FavoriteRow(movie: movie)
+                        if viewModel.likedMovies.isEmpty {
+                            Spacer()
+                            EmptyStateView(messageText: "Henüz favorilere film eklenmedi.")
+                            Spacer()
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 12) {
+                                    ForEach(viewModel.likedMovies) { movie in
+                                        NavigationLink(destination: MovieDetailView(movieId: movie.id ?? 0)) {
+                                            FavoriteRow(movie: movie)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
                                     }
-                                    .buttonStyle(PlainButtonStyle())
                                 }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                         }
                     }
                 }
