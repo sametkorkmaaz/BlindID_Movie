@@ -88,6 +88,7 @@ class BlindService {
             method: .GET,
             body: Optional<String>.none,
             responseModel: [Movie].self
+            
         )
     }
 }
